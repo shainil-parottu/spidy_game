@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spider-Man Game</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background:
+            radial-gradient(circle at 10% 15%, #ffffff 0%, transparent 25%),
+            radial-gradient(circle at 90% 85%, #fff2a8 0%, transparent 25%),
+            linear-gradient(135deg, #ff4b6e, #ff6fae 45%, #55b9ff);
+        overflow-x: hidden;
+        padding: 25px 15px;
+    }
+
+    .web {
+        position: fixed;
+        font-size: 130px;
+        opacity: 0.18;
+        pointer-events: none;
+        user-select: none;
+    }
+
+    .web.one {
+        top: -35px;
+        left: -25px;
+        transform: rotate(-20deg);
+    }
+
+    .web.two {
+        bottom: -40px;
+        right: -20px;
+        transform: rotate(160deg);
+    }
+
+    .container {
+        width: 100%;
+        max-width: 470px;
+        text-align: center;
+        position: relative;
+        z-index: 2;
+    }
+
+    .credit {
+        display: inline-block;
+        background: white;
+        padding: 8px 16px;
+        border-radius: 30px;
+        font-size: 12px;
+        font-weight: bold;
+        color: #333;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        margin-bottom: 14px;
+    }
+
+    .credit span { color: #e91d3e; }
+
+    h1 {
+        font-size: 42px;
+        font-weight: 1000;
+        color: white;
+        text-shadow: 3px 3px 0 #174a9c, 5px 5px 0 rgba(0,0,0,0.15);
+        letter-spacing: 1px;
+        margin-bottom: 4px;
+    }
+
+    .subtitle {
+        color: white;
+        font-size: 14px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.25);
+    }
+
+    .card {
+        background: rgba(255,255,255,0.96);
+        border: 4px solid #171717;
+        border-radius: 27px;
+        padding: 22px 18px 25px;
+        box-shadow: 0 8px 0 #171717, 0 15px 30px rgba(0,0,0,0.20);
+    }
+
+    .tag {
+        display: inline-block;
+        background: #e92546;
+        color: white;
+        padding: 6px 13px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 900;
+        margin-bottom: 13px;
+    }
+
+    .welcome {
+        font-size: 20px;
+        font-weight: 900;
+        color: #292929;
+        margin-bottom: 7px;
+    }
+
+    .description {
+        font-size: 13px;
+        line-height: 1.5;
+        color: #666;
+        margin-bottom: 20px;
+    }
+
+    .volume-note {
+        background: #fff3cd;
+        border: 2px dashed #e5a900;
+        border-radius: 12px;
+        padding: 10px 8px;
+        margin: 14px 0 18px;
+        font-size: 11px;
+        font-weight: 900;
+        color: #6b5000;
+        animation: volumePulse 1.8s ease-in-out infinite;
+    }
+
+    @keyframes volumePulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.02); }
+    }
+
+    .stats {
+        display: flex;
+        gap: 9px;
+        margin-bottom: 20px;
+    }
+
+    .stat {
+        flex: 1;
+        background: #fff0b3;
+        border: 3px solid #171717;
+        border-radius: 15px;
+        padding: 10px 4px;
+        box-shadow: 0 3px 0 #171717;
+    }
+
+    .stat strong {
+        display: block;
+        font-size: 21px;
+        color: #e32243;
+    }
+
+    .stat small {
+        font-size: 9px;
+        font-weight: 900;
+        color: #444;
+    }
+
+    .difficulty-title {
+        text-align: left;
+        font-size: 14px;
+        font-weight: 900;
+        margin-bottom: 9px;
+        color: #333;
+    }
+
+    .difficulty {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        margin-bottom: 22px;
+    }
+
+    .difficulty button {
+        border: 3px solid #222;
+        background: white;
+        padding: 11px 4px;
+        border-radius: 13px;
+        font-size: 11px;
+        font-weight: 900;
+        cursor: pointer;
+        box-shadow: 0 3px 0 #222;
+        transition: 0.15s ease;
+    }
+
+    .difficulty button:active {
+        transform: translateY(3px);
+        box-shadow: 0 0 0 #222;
+    }
+
+    .difficulty button.active {
+        background: #1769d1;
+        color: white;
+        border-color: #1769d1;
+        box-shadow: 0 3px 0 #0c3670;
+    }
+
+    .start {
+        width: 100%;
+        border: 4px solid #171717;
+        border-radius: 16px;
+        background: #e92749;
+        color: white;
+        padding: 16px;
+        font-size: 18px;
+        font-weight: 1000;
+        cursor: pointer;
+        box-shadow: 0 5px 0 #171717;
+        transition: 0.15s ease;
+    }
+
+    .start:hover {
+        transform: translateY(-2px);
+        filter: brightness(1.06);
+    }
+
+    .start:active {
+        transform: translateY(5px);
+        box-shadow: 0 0 0 #171717;
+    }
+
+    .joke {
+        margin-top: 17px;
+        font-size: 11px;
+        font-weight: bold;
+        color: #666;
+    }
+
+    .footer {
+        margin-top: 20px;
+        color: white;
+        font-size: 11px;
+        font-weight: bold;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    }
+
+    .spider {
+        font-size: 42px;
+        display: inline-block;
+        animation: swing 2.5s ease-in-out infinite;
+        transform-origin: top center;
+    }
+
+    @keyframes swing {
+        0%,100% { transform: rotate(-7deg); }
+        50% { transform: rotate(7deg); }
+    }
+
+    @media (max-width: 400px) {
+        h1 { font-size: 35px; }
+        .card { padding: 19px 14px 22px; }
+        .welcome { font-size: 18px; }
+    }
+
+    /* Reveal page */
+    #revealPage {
+        display: none;
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100vh;
+        background: #111;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        overflow: hidden;
+    }
+
+    #revealImage {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+    }
+
+    #revealPage.show {
+        display: flex;
+        animation: revealIn 0.25s ease-out;
+    }
+
+    @keyframes revealIn {
+        from { opacity: 0; transform: scale(1.03); }
+        to { opacity: 1; transform: scale(1); }
+    }
+</style>
+</head>
+
+<body>
+
+<div id="homePage">
+
+    <div class="web one">🕸️</div>
+    <div class="web two">🕸️</div>
+
+    <div class="container">
+
+        <div class="credit">
+            🕷️ <span>Warning:</span> Great power = questionable decisions 😂
+        </div>
+
+        <div class="spider">🕷️</div>
+
+        <h1>SPIDER-MAN</h1>
+
+        <div class="subtitle">
+            🕸️ THE TOTALLY SERIOUS SPIDER GAME 🕸️
+        </div>
+
+        <div class="card">
+
+            <div class="tag">🎮 GAME TIME</div>
+
+            <div class="welcome">
+                Ready to swing into chaos?
+            </div>
+
+            <div class="description">
+                Choose your difficulty, wear your imaginary mask,
+                and prepare yourself for absolutely nothing... yet. 😂
+            </div>
+
+            <div class="volume-note">
+                🔊 TURN YOUR VOLUME UP FOR BETTER EXPERIENCE 😂
+            </div>
+
+            <div class="stats">
+
+                <div class="stat">
+                    <strong>🕷️</strong>
+                    <small>SPIDER</small>
+                </div>
+
+                <div class="stat">
+                    <strong>∞</strong>
+                    <small>WEBS</small>
+                </div>
+
+                <div class="stat">
+                    <strong>0</strong>
+                    <small>EXCUSES</small>
+                </div>
+
+            </div>
+
+            <div class="difficulty-title">
+                🎯 Select Difficulty
+            </div>
+
+            <div class="difficulty">
+
+                <button onclick="setDifficulty(this, 'Easy')">
+                    🥱<br>EASY
+                </button>
+
+                <button class="active" onclick="setDifficulty(this, 'Normal')">
+                    😎<br>NORMAL
+                </button>
+
+                <button onclick="setDifficulty(this, 'Hard')">
+                    💀<br>HARD
+                </button>
+
+            </div>
+
+            <button class="start" onclick="startGame()">
+                🕷️ START GAME 🚀
+            </button>
+
+            <div class="joke" id="message">
+                Normal selected. Don't worry, Spider-Man has got you. Probably. 😂
+            </div>
+
+        </div>
+
+        <div class="footer">
+            Powered by web-slinging skills & questionable confidence 🕸️
+        </div>
+
+    </div>
+</div>
+
+<!-- This is the page that appears after START GAME -->
+<div id="revealPage">
+    <img id="revealImage" src="1000174477.png" alt="Spider-Man">
+    <audio id="revealSound" src="pavan_meese.mp3" preload="auto"></audio>
+</div>
+
+<script>
+
+let selectedDifficulty = "Normal";
+
+function setDifficulty(button, difficulty) {
+
+    selectedDifficulty = difficulty;
+
+    document.querySelectorAll(".difficulty button")
+        .forEach(btn => btn.classList.remove("active"));
+
+    button.classList.add("active");
+
+    const message = document.getElementById("message");
+
+    if (difficulty === "Easy") {
+        message.innerHTML =
+            "🥱 Easy mode. Even Peter Parker's grandma could do this.";
+    }
+
+    else if (difficulty === "Normal") {
+        message.innerHTML =
+            "😎 Normal selected. Let's pretend you know what you're doing.";
+    }
+
+    else {
+        message.innerHTML =
+            "💀 Hard mode. You have officially chosen suffering.";
+    }
+}
+
+function startGame() {
+
+    /*
+       START BUTTON ACTION:
+       1. Hide the home page.
+       2. Show the uploaded Spider-Man image.
+       3. Play the uploaded MP3.
+
+       Because this function is triggered directly by a button click,
+       the browser normally allows the audio to start immediately.
+    */
+
+    const homePage = document.getElementById("homePage");
+    const revealPage = document.getElementById("revealPage");
+    const sound = document.getElementById("revealSound");
+
+    homePage.style.display = "none";
+    revealPage.classList.add("show");
+
+    sound.currentTime = 0;
+    sound.play().catch(error => {
+        console.log("Audio could not autoplay:", error);
+    });
+}
+
+</script>
+
+</body>
+</html>
